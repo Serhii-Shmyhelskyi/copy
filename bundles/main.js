@@ -1,6 +1,6 @@
-(function($) {
-    $(document).ready(function() {
-        $("input.js-phone").keyup(function() {
+(function ($) {
+    $(document).ready(function () {
+        $("input.js-phone").keyup(function () {
             var val = $(this).val();
             regVal = /[^\d\+\(\)\-]/g;
             newval = val.replace(regVal, "");
@@ -8,10 +8,10 @@
         });
 
         $(".js-phone").intlTelInput({
-            geoIpLookup: function(callback) {
+            geoIpLookup: function (callback) {
                 var geo = '';
                 if (geo == '') {
-                    $.get("//ipinfo.io", function() {}, "jsonp").always(function(resp) {
+                    $.get("//ipinfo.io", function () { }, "jsonp").always(function (resp) {
                         var countryCode = (resp && resp.country) ? resp.country : "";
                         callback(countryCode);
                     });
@@ -22,7 +22,7 @@
             initialCountry: "auto",
             nationalMode: false,
             utilsScript: "./bundles/utils.js",
-            customPlaceholder: function(selectedCountryPlaceholder, selectedCountryData) {
+            customPlaceholder: function (selectedCountryPlaceholder, selectedCountryData) {
                 return selectedCountryPlaceholder;
             },
         });
@@ -30,7 +30,7 @@
 })(jQuery);
 
 function checkIp() {
-    $.getJSON('https://apileads.3snet.tech/check-ip', function(data) {
+    $.getJSON('https://apileads.3snet.tech/check-ip', function (data) {
         console.log(data);
         if (typeof data.ip != 'undefined') {
             var ip = data.ip;
@@ -56,28 +56,48 @@ function copies() {
 }
 
 function visitors() {
-	var el = $(".online .pin");
+    var el = $(".online .pin");
     var left = parseInt($(el).html());
-	var start = left - 20;
-	var end = left + 20;
-	if (start < 100) start = left;
-	if (end > 200) end = left;
+    var start = left - 20;
+    var end = left + 20;
+    if (start < 100) start = left;
+    if (end > 200) end = left;
     $(".online .pin").html(rand(start, end));
     setTimeout('visitors()', rand(3000, 13000));
 }
 
 yesyoucan = 1;
 
-function videoReview()
-{
-	$('.video-review').click(function(){
-		$(this).find(".poster").remove();
-		$(this).find("video").play();
-	});
+function videoReview() {
+    $('.video-review').click(function () {
+        $(this).find(".poster").remove();
+        $(this).find("video").play();
+    });
 }
 
 $(function () {
     copies();
-	visitors();
-	videoReview();
+    visitors();
+    videoReview();
+});
+
+$(document).ready(function () {
+
+    //E-mail Ajax Send
+    $("form").submit(function () { //Change
+        var th = $(this);
+        $.ajax({
+            type: "POST",
+            url: "mail.php", //Change
+            data: th.serialize()
+        }).done(function () {
+            alert("Thank you!");
+            setTimeout(function () {
+                // Done Functions
+                th.trigger("reset");
+            }, 1000);
+        });
+        return false;
+    });
+
 });
